@@ -17,6 +17,9 @@ class Node:
     def __init__(self, data):
         self._data = data
 
+    def allocatable(self):
+        return self._data.get('status', {}).get('allocatable', {})
+
     def capacity(self):
         return self._data.get('status', {}).get('capacity', {})
 
@@ -50,11 +53,13 @@ def main():
     namerow = []
     machinerow = []
     labelsrow = []
+    allocatablerow = []
     capacityrow = []
     for n in nodes:
         namerow.append(n.name())
         machinerow.append(n.machine())
         labelsrow.append(n.labels())
+        allocatablerow.append(n.allocatable())
         capacityrow.append(n.capacity())
 
     tablerows = '<tr><th>name</th>'
@@ -69,6 +74,16 @@ def main():
 
     tablerows += '<tr><th>labels</th>'
     for c in labelsrow:
+        keys = sorted(c.keys())
+        l = ''
+        for k in keys:
+            l += f'{k}: {c[k]}<br/>'
+
+        tablerows += f'<td>{l}</td>'
+    tablerows += '</tr>'
+
+    tablerows += '<tr><th>allocatable</th>'
+    for c in allocatablerow:
         keys = sorted(c.keys())
         l = ''
         for k in keys:
